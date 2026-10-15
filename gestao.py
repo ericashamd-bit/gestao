@@ -21,13 +21,13 @@ st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 #    )
 
 def get_connection():
-    return mysql.connector.connect(
+    return pymysql.connect(
         host=st.secrets["mysql"]["host"],
         port=int(st.secrets["mysql"]["port"]),
         user=st.secrets["mysql"]["user"],
         password=st.secrets["mysql"]["password"],
         database=st.secrets["mysql"]["database"],
-        ssl_verify_identity=False
+        ssl={'ssl': True}
     )
 
 # -------------------------------------------------------------------
