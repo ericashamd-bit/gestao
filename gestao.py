@@ -1,6 +1,5 @@
 import streamlit as st
-#import mysql.connector
-import pymysql
+import mysql.connector
 import pandas as pd
 from datetime import datetime
 import smtplib
@@ -9,7 +8,8 @@ from email.mime.multipart import MIMEMultipart
 import plotly.graph_objects as go
 import plotly.express as px
 import bcrypt
-
+import pymysql
+import pymysql.cursors
 
 st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 
@@ -21,21 +21,15 @@ st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 #        database="gestao_engenharia"
 #    )
 
-import streamlit as st
-from sqlalchemy import create_engine
 
 def get_connection():
-    user = st.secrets["mysql"]["user"]
-    password = st.secrets["mysql"]["password"]
-    host = st.secrets["mysql"]["host"]
-    port = st.secrets["mysql"]["port"]
-    database = st.secrets["mysql"]["database"]
-
-    # String de conexão do SQLAlchemy gerida pelo PyMySQL com SSL ativo
-    db_url = f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}?ssl_check_hostname=false&ssl_verify_cert=false"
-    
-    engine = create_engine(db_url)
-    return engine.raw_connection()
+    return pymysql.connect(
+        host="localhost",
+        user="root",        # coloque o seu usuário local do MySQL
+        password="0692",     # a sua palavra-passe local
+        database="gestao_engenharia",
+        port=3306
+    )
 # -------------------------------------------------------------------
 # FUNÇÕES DE SEGURANÇA E AUTENTICAÇÃO
 # -------------------------------------------------------------------
@@ -52,7 +46,7 @@ def garantir_usuario_admin_inicial():
     """ Cria o utilizador admin automaticamente no banco se a tabela estiver vazia """
     try:
         conn = get_connection()
-        cur = conn.cursor(dictionary=True)
+        cur = conn.cursor(pymysql.cursors.DictCursor)
         cur.execute("SELECT COUNT(*) as total FROM usuarios")
         res = cur.fetchone()
         if res['total'] == 0:
@@ -75,7 +69,7 @@ garantir_usuario_admin_inicial()
 
 def autenticar_usuario(login_input, senha_input):
     conn = get_connection()
-    cur = conn.cursor(dictionary=True)
+    cur = conn.cursor(pymysql.cursors.DictCursor)
     cur.execute("SELECT * FROM usuarios WHERE login = %s", (login_input,))
     usr = cur.fetchone()
     cur.close()
@@ -180,8 +174,8 @@ st.sidebar.markdown("---")
 def enviar_email_generico(destinatarios, assunto, corpo_html):
     SMTP_SERVER = "smtp.office365.com"
     SMTP_PORT = 587
-    REMETENTE_EMAIL = "DOCUMENTAOUSI@whbbrasil.com.br"
-    REMETENTE_SENHA = "SUA_SENHA_CORRETA_AQUI"
+    REMETENTE_EMAIL = "ericsj@whbbrasil.com.br"
+    REMETENTE_SENHA = "0692+++cirE"
 
     if not destinatarios:
         return False
@@ -261,7 +255,7 @@ st.title("⚙️ Sistema de Gestão de Engenharia")
 # VERIFICAÇÃO VISUAL DE ALERTA NO SISTEMA AO LOGAR
 # -------------------------------------------------------------------
 conn = get_connection()
-cur_chk = conn.cursor(dictionary=True)
+cur_chk = conn.cursor(pymysql.cursors.DictCursor)
 
 semana_atual_str = f"Semana {datetime.now().isocalendar()[1]:02d}"
 ano_atual = datetime.now().year
@@ -813,7 +807,7 @@ elif opcao == "5. Plano de Ação - Revisões":
             query += f" WHERE i.status = '{filter_status}'"
         query += " ORDER BY sr.data_abertura DESC, i.id ASC"
         
-        cursor = conn.cursor(dictionary=True)
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute(query)
         itens = cursor.fetchall()
         cursor.close()
@@ -1266,7 +1260,7 @@ elif opcao == "8. Plano de Ação - Indicadores":
     if filter_setor != "Todos": query_ind += f" AND ia.setor_responsavel = '{filter_setor}'"
     query_ind += " ORDER BY ir.data_registro DESC"
 
-    cursor_ind = conn.cursor(dictionary=True)
+    cursor_ind = conn.cursor(pymysql.cursors.DictCursor)
     cursor_ind.execute(query_ind)
     itens_ind = cursor_ind.fetchall()
     cursor_ind.close()
