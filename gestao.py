@@ -8,6 +8,7 @@ from email.mime.multipart import MIMEMultipart
 import plotly.graph_objects as go
 import plotly.express as px
 import bcrypt
+import pymysql
 
 st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 
