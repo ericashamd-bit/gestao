@@ -22,6 +22,7 @@ st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 #    )
 
 import ssl
+import pymysql
 
 def get_connection():
     ctx = ssl.create_default_context()
@@ -34,7 +35,9 @@ def get_connection():
         user=st.secrets["mysql"]["user"],
         password=st.secrets["mysql"]["password"],
         database=st.secrets["mysql"]["database"],
-        ssl=ctx
+        ssl=ctx,
+        autocommit=True,
+        client_flag=pymysql.constants.CLIENT.MULTI_STATEMENTS
     )
 # -------------------------------------------------------------------
 # FUNÇÕES DE SEGURANÇA E AUTENTICAÇÃO
