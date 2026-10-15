@@ -22,14 +22,13 @@ st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 #    )
 
 
+import sqlite3
+
 def get_connection():
-    return pymysql.connect(
-        host="localhost",
-        user="root",        # coloque o seu usuário local do MySQL
-        password="0692",     # a sua palavra-passe local
-        database="gestao_engenharia",
-        port=3306
-    )
+    # Cria ou abre o ficheiro banco.db na raiz do projeto
+    conn = sqlite3.connect("banco.db", check_same_thread=False)
+    conn.row_factory = sqlite3.Row  # Faz retornar os dados como dicionário
+    return conn
 # -------------------------------------------------------------------
 # FUNÇÕES DE SEGURANÇA E AUTENTICAÇÃO
 # -------------------------------------------------------------------
