@@ -36,8 +36,8 @@ def get_connection():
         password=st.secrets["mysql"]["password"],
         database=st.secrets["mysql"]["database"],
         ssl=ctx,
-        autocommit=True,
-        client_flag=pymysql.constants.CLIENT.MULTI_STATEMENTS
+        auth_plugin='caching_sha2_password',
+        autocommit=True
     )
 # -------------------------------------------------------------------
 # FUNÇÕES DE SEGURANÇA E AUTENTICAÇÃO
