@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import bcrypt
 import pymysql
-import pymysql.cursors
+#import pymysql.cursors
 
 st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 
