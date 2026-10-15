@@ -25,7 +25,8 @@ def get_connection():
         port=int(st.secrets["mysql"]["port"]),
         user=st.secrets["mysql"]["user"],
         password=st.secrets["mysql"]["password"],
-        database=st.secrets["mysql"]["database"]
+        database=st.secrets["mysql"]["database"],
+        ssl_verify_identity=False
     )
 
 # -------------------------------------------------------------------
