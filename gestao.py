@@ -21,24 +21,21 @@ st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 #        database="gestao_engenharia"
 #    )
 
-import ssl
-import pymysql
 import streamlit as st
+from sqlalchemy import create_engine
 
 def get_connection():
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
+    user = st.secrets["mysql"]["user"]
+    password = st.secrets["mysql"]["password"]
+    host = st.secrets["mysql"]["host"]
+    port = st.secrets["mysql"]["port"]
+    database = st.secrets["mysql"]["database"]
 
-    return pymysql.connect(
-        host=st.secrets["mysql"]["host"],
-        port=int(st.secrets["mysql"]["port"]),
-        user=st.secrets["mysql"]["user"],
-        password=st.secrets["mysql"]["password"],
-        database=st.secrets["mysql"]["database"],
-        ssl=ctx,
-        autocommit=True
-    )
+    # String de conexão do SQLAlchemy gerida pelo PyMySQL com SSL ativo
+    db_url = f"mysql+pymysql://{user}:{password}@{host}:{port}/{database}?ssl_check_hostname=false&ssl_verify_cert=false"
+    
+    engine = create_engine(db_url)
+    return engine.raw_connection()
 # -------------------------------------------------------------------
 # FUNÇÕES DE SEGURANÇA E AUTENTICAÇÃO
 # -------------------------------------------------------------------
