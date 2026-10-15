@@ -1,5 +1,6 @@
 streamlit
 pymysql
+sqlalchemy
 pandas
 plotly
 bcrypt
