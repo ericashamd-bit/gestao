@@ -21,6 +21,8 @@ st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 #        database="gestao_engenharia"
 #    )
 
+import ssl
+
 def get_connection():
     return pymysql.connect(
         host=st.secrets["mysql"]["host"],
@@ -28,7 +30,7 @@ def get_connection():
         user=st.secrets["mysql"]["user"],
         password=st.secrets["mysql"]["password"],
         database=st.secrets["mysql"]["database"],
-        ssl={'ssl': True}
+        ssl=ssl.create_default_context()
     )
 
 # -------------------------------------------------------------------
