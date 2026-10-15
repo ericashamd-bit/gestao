@@ -11,12 +11,21 @@ import bcrypt
 
 st.set_page_config(page_title="Gestão de Engenharia", layout="wide")
 
+#def get_connection():
+#    return mysql.connector.connect(
+#        host="localhost",
+#        user="root",
+#        password="0692",
+#        database="gestao_engenharia"
+#    )
+
 def get_connection():
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="0692",
-        database="gestao_engenharia"
+        host=st.secrets["mysql"]["host"],
+        port=int(st.secrets["mysql"]["port"]),
+        user=st.secrets["mysql"]["user"],
+        password=st.secrets["mysql"]["password"],
+        database=st.secrets["mysql"]["database"]
     )
 
 # -------------------------------------------------------------------
